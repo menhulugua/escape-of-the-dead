@@ -1,20 +1,20 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { GARAGE_ACTION } from '../constants';
 
-class Garage extends React.Component {
-  render() {
+const Garage = props => {
     return (
       <div>
         <div>Garage</div>
-        <div>Fix progress: {this.props.garage}%</div>
+        <div>Fix progress: {props.garage}%</div>
+        <button onClick={()=>props.rollDice(GARAGE_ACTION)} disabled={props.disabled}>Roll</button>
       </div>
     );
-  }
 }
 
 const mapStateToProps = state => {
   return {
-    garage: state.garage
+    garage: state.garage,
   };
 }
 

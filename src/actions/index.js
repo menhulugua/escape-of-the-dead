@@ -1,8 +1,15 @@
-import { SPAWN_COUNT } from ../constants;
+import { SPAWN_COUNT } from '../constants';
 
 export const killZombie = killed => {
   return {
     type: 'KILL_ZOMBIE',
+    payload: killed
+  };
+}
+
+export const killIncrease = killed => {
+  return {
+    type: 'KILL_INCREASE',
     payload: killed
   };
 }
@@ -56,5 +63,31 @@ export const zombieSpawn = () => {
 export const noZombieSpawn = () => {
   return {
     type: 'NO_ZOMBIE_SPAWN'
+  };
+}
+
+export const playAction = action => {
+  return {
+    type: 'PLAY_ACTION',
+    payload: action
+  };
+}
+
+export const clearAction = () => {
+  return {
+    type: 'CLEAR_ACTION',
+  };
+}
+
+export const assignDice = dice => {
+  return {
+    type: 'ASSIGN_DICE',
+    payload: dice
+  };
+}
+
+export const clearDice = () => {
+  return {
+    type: 'CLEAR_DICE'
   };
 }

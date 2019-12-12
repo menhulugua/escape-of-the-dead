@@ -1,15 +1,15 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { BARRICADE_ACTION } from '../constants';
 
-class Barricade extends React.Component {
-  render() {
+const Barricade = props => {
     return (
       <div>
       <div>Barricade</div>
-      <div>HP: {this.props.barricade}</div>
+      <div>HP: {props.barricade}</div>
+      <button onClick={()=>props.rollDice(BARRICADE_ACTION)} disabled={props.disabled}>Roll</button>
       </div>
     );
-  }
 }
 
 const mapStateToProps = state => {

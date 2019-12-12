@@ -4,7 +4,10 @@ import { STARTING_THREAT, STARTING_HP, STARTING_CAR_FIX } from '../constants';
 const zombieReducer = (state=STARTING_THREAT, action) => {
   switch(action.type) {
     case 'KILL_ZOMBIE':
-      return state - action.payload;
+      if (state - action.payload < 0)
+        return 0;
+      else
+        return state - action.payload;
     case 'SPAWN_ZOMBIE':
       return state + action.payload;
     default:
@@ -17,7 +20,10 @@ const barricadeReducer = (state=STARTING_HP, action) => {
     case 'DAMAGE_BARRICADE':
       return state - action.payload;
     case 'FIX_BARRICADE':
-      return state + action.payload;
+      if (state + action.payload <= STARTING_HP)
+        return state + action.payload;
+      else
+        return STARTING_HP;
     default:
       return state;
   }
@@ -34,7 +40,7 @@ const garageReducer = (state=STARTING_CAR_FIX, action) => {
 
 const zombieKilledReducer = (state=0, action) => {
   switch(action.type) {
-    case 'KILL_ZOMBIE':
+    case 'KILL_INCREASE':
       return state + action.payload;
     case 'USE_REWARD':
       return 0;
@@ -75,6 +81,28 @@ const zombieSpawnReducer = (state=true, action) => {
   }
 }
 
+const actionPlayedReducer = (state=[], action) => {
+  switch(action.type) {
+    case 'PLAY_ACTION':
+      return [...state, action.payload];
+    case 'CLEAR_ACTION':
+      return [];
+    default:
+      return state;
+  }
+}
+
+const diceAssignedReducer = (state=[], action) => {
+  switch(action.type) {
+    case 'ASSIGN_DICE':
+      return [...action.payload];
+    case 'CLEAR_DICE':
+      return [];
+    default:
+      return state;
+  }
+}
+
 export default combineReducers({
   zombie: zombieReducer,
   barricade: barricadeReducer,
@@ -82,5 +110,7 @@ export default combineReducers({
   zombieKilled: zombieKilledReducer,
   phase: phaseReducer,
   round: roundReducer,
-  zombieSpawn: zombieSpawnReducer
+  zombieSpawn: zombieSpawnReducer,
+  actionPlayed: actionPlayedReducer,
+  diceAssigned: diceAssignedReducer
 });

@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import { STARTING_THREAT, STARTING_HP, STARTING_CAR_FIX } from '../constants';
+import { STARTING_THREAT, STARTING_HP, STARTING_CAR_FIX, VICTORY_CAR_FIX } from '../constants';
 
 const zombieReducer = (state=STARTING_THREAT, action) => {
   switch(action.type) {
@@ -18,7 +18,10 @@ const zombieReducer = (state=STARTING_THREAT, action) => {
 const barricadeReducer = (state=STARTING_HP, action) => {
   switch(action.type) {
     case 'DAMAGE_BARRICADE':
-      return state - action.payload;
+      if (state - action.payload < 0)
+        return 0;
+      else
+        return state - action.payload;
     case 'FIX_BARRICADE':
       if (state + action.payload <= STARTING_HP)
         return state + action.payload;
@@ -32,7 +35,10 @@ const barricadeReducer = (state=STARTING_HP, action) => {
 const garageReducer = (state=STARTING_CAR_FIX, action) => {
   switch(action.type) {
     case 'FIX_GARAGE':
-      return state + action.payload * 10;
+      if (state + action.payload * 10 > VICTORY_CAR_FIX)
+        return VICTORY_CAR_FIX;
+      else
+        return state + action.payload * 10;
     default:
       return state;
   }
@@ -70,12 +76,10 @@ const roundReducer = (state=1, action) => {
   }
 }
 
-const zombieSpawnReducer = (state=true, action) => {
+const canZombieSpawnReducer = (state=true, action) => {
   switch(action.type) {
-    case 'NO_ZOMBIE_SPAWN':
-      return false;
-    case 'ZOMBIE_SPAWN':
-      return true;
+    case 'CAN_ZOMBIE_SPAWN':
+      return action.payload;
     default:
       return state;
   }
@@ -103,14 +107,22 @@ const diceAssignedReducer = (state=[], action) => {
   }
 }
 
-export default combineReducers({
+const appReducer = combineReducers({
   zombie: zombieReducer,
   barricade: barricadeReducer,
   garage: garageReducer,
   zombieKilled: zombieKilledReducer,
   phase: phaseReducer,
   round: roundReducer,
-  zombieSpawn: zombieSpawnReducer,
+  canZombieSpawn: canZombieSpawnReducer,
   actionPlayed: actionPlayedReducer,
   diceAssigned: diceAssignedReducer
 });
+
+const rootReducer = (state, action) => {
+  if (action.type === 'RESET_GAME')
+    state = undefined;
+  return appReducer(state, action);
+};
+
+export default rootReducer;

@@ -54,15 +54,10 @@ export const phaseProgress = () => {
   };
 }
 
-export const zombieSpawn = () => {
+export const canZombieSpawn = value => {
   return {
-    type: 'ZOMBIE_SPAWN'
-  };
-}
-
-export const noZombieSpawn = () => {
-  return {
-    type: 'NO_ZOMBIE_SPAWN'
+    type: 'CAN_ZOMBIE_SPAWN',
+    payload: value
   };
 }
 
@@ -89,5 +84,11 @@ export const assignDice = dice => {
 export const clearDice = () => {
   return {
     type: 'CLEAR_DICE'
+  };
+}
+
+export const resetGame = () => {
+  return {
+    type: 'RESET_GAME'
   };
 }
